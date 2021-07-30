@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'google-cloud-pubsub', '~> 2.7.1'
   spec.add_dependency 'clamp', '~> 1.3.2'
   spec.add_dependency 'jazz_fingers', '~> 6.2.0'
   spec.add_dependency 'rainbow', '~> 3.0.0'
