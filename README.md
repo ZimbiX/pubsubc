@@ -18,12 +18,11 @@ Created as a learning exercise, but also useful since the `gcloud pubsub` utilit
   - [Direct](#direct)
   - [Bundler](#bundler)
 - [Usage](#usage)
-  - [Overview](#overview)
   - [Subscribe](#subscribe)
   - [Publish message](#publish-message)
   - [Publish generated messages](#publish-generated-messages)
 - [Example](#example)
-- [More usage info](#more-usage-info)
+- [Help info](#help-info)
 - [Contributing](#contributing)
 - [Development](#development)
   - [Pre-push hook](#pre-push-hook)
@@ -80,7 +79,51 @@ bundle exec pubsubc
 
 ## Usage
 
-### Overview
+### Subscribe
+
+To subscribe and continuously log all messages from the topic:
+
+```bash
+pubsubc sub
+```
+
+### Publish message
+
+To publish a single message to the topic:
+
+```bash
+pubsubc pub msg "G'day"
+```
+
+### Publish generated messages
+
+To publish a generated message to the topic every second:
+
+```bash
+pubsubc pub gen --interval 1000
+```
+
+## Example
+
+Example with a generator and several subscribers:
+
+![](doc/example-with-generator-and-several-subscribers.png)
+
+The generator was run with:
+
+```bash
+pubsubc pub gen --interval 1
+```
+
+And each subscriber:
+
+```bash
+pubsubc sub
+```
+
+## Help info
+
+Output of `pubsubc --help`:
 
 ```
 Usage:
@@ -116,41 +159,7 @@ Options:
     -h, --help                          print help
 ```
 
-### Subscribe
-
-To subscribe and continuously log all messages from the topic:
-
-```bash
-pubsubc sub
-```
-
-### Publish message
-
-To publish a single message to the topic:
-
-```bash
-pubsubc pub msg "G'day"
-```
-
-### Publish generated messages
-
-To publish a generated message to the topic every second:
-
-```bash
-pubsubc pub gen --interval 1000
-```
-
-## Example
-
-TODO: EXAMPLE
-
-## More usage info
-
-See:
-
-```bash
-pubsubc --help
-```
+Suffix `--help` to any subcommand to see the usage info for it.
 
 ## Contributing
 
