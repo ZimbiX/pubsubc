@@ -16,10 +16,6 @@ Clamp do
 
     Created as a learning exercise, but also useful since the 'gcloud pubsub' commands don't support the emulator, and it doesn't provide a continuous subscribe command.
 
-    To start the emulator:
-
-        docker-compose up -d pubsub
-
     To clean up:
 
         gcloud pubsub topics delete my-topic

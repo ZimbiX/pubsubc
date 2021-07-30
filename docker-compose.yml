@@ -7,6 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: dev-environment
+    depends_on:
+      - pubsub-emulator
     working_dir: /work
     entrypoint: scripts/entrypoint
     command: bash
@@ -14,6 +16,16 @@ services:
       - .:/work
       - ruby-2.7.2-gem-cache:/usr/local/bundle
       - ~/.docker-rc.d/:/.docker-rc.d/:ro
+    environment:
+      PUBSUB_EMULATOR_HOST: pubsub-emulator:8085
+
+  pubsub-emulator:
+    build:
+      context: .
+      dockerfile: pubsub-emulator-Dockerfile
+    command: gcloud beta emulators pubsub start --host-port=0.0.0.0:8085
+    ports:
+      - 8085:8085
 
 volumes:
   ruby-2.7.2-gem-cache: ~

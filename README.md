@@ -25,6 +25,7 @@ Created as a learning exercise, but also useful since the `gcloud pubsub` utilit
 - [Help info](#help-info)
 - [Contributing](#contributing)
 - [Development](#development)
+  - [Pub/Sub emulator](#pubsub-emulator)
   - [Pre-push hook](#pre-push-hook)
   - [Release](#release)
 
@@ -135,10 +136,6 @@ Usage:
 
   Created as a learning exercise, but also useful since the 'gcloud pubsub' commands don't support the emulator, and it doesn't provide a continuous subscribe command.
 
-  To start the emulator:
-
-      docker-compose up -d pubsub
-
   To clean up:
 
       gcloud pubsub topics delete my-topic
@@ -170,6 +167,14 @@ Suffix `--help` to any subcommand to see the usage info for it.
 Pull requests welcome! =)
 
 ## Development
+
+### Pub/Sub emulator
+
+To run the Pub/Sub emulator (with Docker):
+
+```bash
+docker-compose up -d pubsub-emulator
+```
 
 ### Pre-push hook
 

@@ -1,0 +1,28 @@
+FROM alpine:3.14 as base
+
+RUN apk --no-cache add \
+    bash \
+    bash-completion \
+    ca-certificates \
+    curl \
+    python3 \
+    openjdk8-jre
+
+FROM base as gcloud-build
+
+ENV CLOUD_SDK_VERSION 350.0.0
+
+RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz && \
+    /google-cloud-sdk/bin/gcloud components install beta pubsub-emulator && \
+    rm "/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz"
+
+FROM base
+
+ENV PATH /google-cloud-sdk/bin:$PATH
+ENV CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK true
+ENV CLOUDSDK_CONTAINER_USE_APPLICATION_DEFAULT_CREDENTIALS true
+
+COPY --from=gcloud-build /google-cloud-sdk /google-cloud-sdk
+
+CMD ["bash"]
