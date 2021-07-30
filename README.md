@@ -4,10 +4,12 @@
 
 A simple command-line client for [Google Cloud Pub/Sub](https://cloud.google.com/pubsub).
 
-Created as a learning exercise, but also useful since the `gcloud pubsub` utility:
+Unlike the `gcloud pubsub` utility, `pubsubc`:
 
-- Doesn't support the Pub/Sub emulator
-- Doesn't provide a continuous subscribe command
+- Supports the [Pub/Sub emulator](https://cloud.google.com/pubsub/docs/emulator)
+- Provides a continuous subscribe command - to see all messages as they come in
+
+Since this was originally created as a learning exercise for integrating to Pub/Sub, the source code should be simple enough for you to copy and adapt into your own application.
 
 ## Contents
 
@@ -165,6 +167,8 @@ Suffix `--help` to any subcommand to see the usage info for it.
 ## Contributing
 
 Pull requests welcome! =)
+
+However, I don't intend to duplicate functionality that exists in the `gcloud pubsub` utility, unless it's an improvement over what's in that.
 
 ## Development
 
