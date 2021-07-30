@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev-environment
+    working_dir: /work
+    entrypoint: scripts/entrypoint
+    command: bash
+    volumes:
+      - .:/work
+      - gem-cache:/usr/local/bundle
+      - ~/.docker-rc.d/:/.docker-rc.d/:ro
+
+volumes:
+  gem-cache: ~
