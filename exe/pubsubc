@@ -1,0 +1,180 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+ENV['GOOGLE_AUTH_SUPPRESS_CREDENTIALS_WARNINGS'] = 'true'
+
+require 'google/cloud/pubsub'
+require 'clamp'
+require 'pry'
+
+Clamp.allow_options_after_parameters = true
+
+Clamp do
+  self.description = <<~TEXT
+    A simple client for Google Cloud Pub/Sub.
+
+    Created as a learning exercise, but also useful since the 'gcloud pubsub' commands don't support the emulator, it doesn't provide a continuous subscribe command.
+
+    To start the emulator:
+
+        docker-compose up -d pubsub
+
+    To clean up:
+
+        gcloud pubsub topics delete my-topic
+        gcloud pubsub subscriptions delete my-subscription
+  TEXT
+
+  option '--topic',
+         'TOPIC_NAME',
+         'The name of the Pub/Sub topic',
+         attribute_name: :topic_name,
+         default: 'my-topic'
+
+  option '--subscription',
+         'SUBSCRIPTION_NAME',
+         'The name of the Pub/Sub subscription within the topic',
+         attribute_name: :subscription_name,
+         default: 'my-subscription'
+
+  option '--remote', :flag, 'Connect to the real Pub/Sub, rather than a local Pub/Sub emulator'
+
+  option '--emulator-host',
+         'EMULATOR_HOST',
+         'The host and port of the Pub/Sub emulator',
+         environment_variable: 'PUBSUB_EMULATOR_HOST',
+         default: 'localhost:8085' do |host|
+    ENV.delete('PUBSUB_EMULATOR_HOST')
+    ENV.delete('PUBSUB_PROJECT_ID')
+    host
+  end
+
+  subcommand 'pub', 'Publishing messages to the topic' do
+    subcommand 'msg', 'Publish one message' do
+      parameter 'MESSAGE', 'The message string to publish to the topic'
+
+      def execute
+        publish(message)
+      end
+    end
+
+    subcommand 'gen', 'Publish generated messages' do
+      option %w[-i --interval],
+             'INTERVAL_MS',
+             'How long we should sleep before generating each message',
+             attribute_name: :interval_ms,
+             required: true,
+             &method(:Integer)
+
+      def execute
+        (1..).each do |i|
+          message = "This is message #{i}"
+          publish(message)
+          sleep(interval_ms / 1000.0)
+        end
+      end
+    end
+
+    def publish(message)
+      # Ensure the subscription exists first so the message won't just get dropped
+      subscription
+
+      topic.publish(message)
+
+      puts "Published message: #{message}"
+    end
+  end
+
+  subcommand 'sub', 'Subscribe to messages on the topic' do
+    def execute
+      subscribe do |received_message|
+        puts "Data: #{received_message.message.data}, published at #{received_message.message.published_at}"
+      end
+    end
+
+    def subscribe
+      subscriber = subscription.listen(threads: { callback: 16 }) do |received_message|
+        yield received_message
+        received_message.acknowledge!
+      end
+
+      subscriber.on_error do |exception|
+        puts "Exception: #{exception.class} #{exception.message}"
+      end
+
+      # Gracefully shut down the subscriber on program exit, blocking until all received messages have been processed or 10 seconds have passed
+      at_exit do
+        subscriber.stop!(10)
+      end
+
+      puts 'Listening for messages'
+
+      # Start the background threads that will call the block passed to listen
+      subscriber.start
+
+      # Keep the program open while the threads handle receiving messages
+      sleep
+    end
+  end
+
+  subcommand 'shell', 'Get a Ruby shell to interact with Pub/Sub' do
+    def execute
+      binding.pry
+    end
+  end
+
+  def subscription
+    @subscription ||= get_or_create_topic_subscription(subscription_name)
+  end
+
+  def get_or_create_topic_subscription(subscription_name)
+    topic.tap do
+      print "Checking existence of subscription '%s'... " % subscription_name
+    end.get_subscription(subscription_name)&.tap do
+      puts 'exists'
+    end || begin
+      print 'creating... '
+      topic.create_subscription(subscription_name).tap { puts 'done' }
+    end
+  end
+
+  def topic
+    @topic ||= get_or_create_topic(topic_name)
+  end
+
+  def get_or_create_topic(topic_name)
+    pubsub.tap do
+      print "Checking existence of topic '%s'... " % topic_name
+    end.get_topic(topic_name)&.tap do
+      puts 'exists'
+    end || begin
+      print 'creating... '
+      pubsub.create_topic(topic_name).tap { puts 'done' }
+    end
+  end
+
+  def pubsub
+    @pubsub ||= begin
+      print 'Initialising Pub/Sub client for %s... ' % (remote? ? 'remote' : "emulator (#{emulator_host})")
+      Google::Cloud::PubSub.new(**pubsub_args).tap { puts 'done' }
+    end
+  end
+
+  def pubsub_args
+    remote? ? pubsub_remote_args : pubsub_emulator_args
+  end
+
+  def pubsub_remote_args
+    {
+      project_id: 'greensync-dex-dev',
+    }
+  end
+
+  def pubsub_emulator_args
+    {
+      project_id: 'greensync-dex-dev-nonexistent',
+      emulator_host: emulator_host,
+    }
+  end
+end
