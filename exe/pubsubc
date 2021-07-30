@@ -12,9 +12,9 @@ Clamp.allow_options_after_parameters = true
 
 Clamp do
   self.description = <<~TEXT
-    A simple client for Google Cloud Pub/Sub.
+    A simple command-line client for Google Cloud Pub/Sub.
 
-    Created as a learning exercise, but also useful since the 'gcloud pubsub' commands don't support the emulator, it doesn't provide a continuous subscribe command.
+    Created as a learning exercise, but also useful since the 'gcloud pubsub' commands don't support the emulator, and it doesn't provide a continuous subscribe command.
 
     To start the emulator:
 
