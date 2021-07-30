@@ -22,6 +22,6 @@ task :update_readme_help do
 
   HELP
   readme = File.read('README.md')
-  readme.sub!(/(\<\!-- Help --\>\n).*(\<\!-- \/Help --\>)/m, '\1%s\2' % help)
+  readme.sub!(%r{(<!-- Help -->\n).*(<!-- /Help -->)}m, '\1%s\2' % help)
   File.write('README.md', readme)
 end

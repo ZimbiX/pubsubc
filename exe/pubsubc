@@ -10,7 +10,7 @@ require 'pry'
 
 Clamp.allow_options_after_parameters = true
 
-Clamp do
+Clamp do # rubocop:disable Metrics/BlockLength
   self.description = <<~TEXT
     A simple command-line client for Google Cloud Pub/Sub.
 
@@ -46,7 +46,7 @@ Clamp do
     host
   end
 
-  subcommand 'pub', 'Publishing messages to the topic' do
+  subcommand 'pub', 'Publishing messages to the topic' do # rubocop:disable Metrics/BlockLength
     subcommand 'msg', 'Publish one message' do
       parameter 'MESSAGE', 'The message string to publish to the topic'
 
@@ -116,7 +116,7 @@ Clamp do
 
   subcommand 'shell', 'Get a Ruby shell to interact with Pub/Sub' do
     def execute
-      binding.pry
+      binding.pry # rubocop:disable Lint/Debugger
     end
   end
 
@@ -127,7 +127,7 @@ Clamp do
   def get_or_create_topic_subscription(subscription_name)
     topic.tap do
       print "Checking existence of subscription '%s'... " % subscription_name
-    end.get_subscription(subscription_name)&.tap do
+    end.get_subscription(subscription_name)&.tap do # rubocop:disable Style/MultilineBlockChain
       puts 'exists'
     end || begin
       print 'creating... '
@@ -142,7 +142,7 @@ Clamp do
   def get_or_create_topic(topic_name)
     pubsub.tap do
       print "Checking existence of topic '%s'... " % topic_name
-    end.get_topic(topic_name)&.tap do
+    end.get_topic(topic_name)&.tap do # rubocop:disable Style/MultilineBlockChain
       puts 'exists'
     end || begin
       print 'creating... '
