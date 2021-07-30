@@ -12,8 +12,8 @@ services:
     command: bash
     volumes:
       - .:/work
-      - gem-cache:/usr/local/bundle
+      - ruby-2.7.2-gem-cache:/usr/local/bundle
       - ~/.docker-rc.d/:/.docker-rc.d/:ro
 
 volumes:
-  gem-cache: ~
+  ruby-2.7.2-gem-cache: ~
