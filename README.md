@@ -24,6 +24,8 @@ Since this was originally created as a learning exercise for integrating to Pub/
   - [Publish message](#publish-message)
   - [Publish generated messages](#publish-generated-messages)
 - [Example](#example)
+  - [Communicating some messages](#communicating-some-messages)
+  - [Publishing from a message generator with several subscribers](#publishing-from-a-message-generator-with-several-subscribers)
 - [Help info](#help-info)
 - [Contributing](#contributing)
 - [Development](#development)
@@ -108,7 +110,32 @@ pubsubc pub gen --interval 1000
 
 ## Example
 
-Example with a generator and several subscribers:
+### Communicating some messages
+
+```
+➜ pubsubc pub msg "Sup wigga"    
+Initialising Pub/Sub client for emulator (localhost:8085)... done
+Checking existence of topic 'my-topic'... creating... done
+Checking existence of subscription 'my-subscription'... creating... done
+Published message: Sup wigga
+
+➜ pubsubc pub msg "Yo J-dog" 
+Initialising Pub/Sub client for emulator (localhost:8085)... done
+Checking existence of topic 'my-topic'... exists
+Checking existence of subscription 'my-subscription'... exists
+Published message: Yo J-dog
+
+➜ pubsubc sub                
+Initialising Pub/Sub client for emulator (localhost:8085)... done
+Checking existence of topic 'my-topic'... exists
+Checking existence of subscription 'my-subscription'... exists
+Listening for messages
+Data: Sup wigga, published at 2021-07-30 23:19:06 +1000
+Data: Yo J-dog, published at 2021-07-30 23:19:41 +1000
+^C
+```
+
+### Publishing from a message generator with several subscribers
 
 ![](doc/example-with-generator-and-several-subscribers.png)
 
