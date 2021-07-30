@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Brendan Weibrecht']
   spec.email         = ['brendan@weibrecht.net.au']
 
-  spec.summary       = 'TODO'
+  spec.summary       = 'A simple command-line client for Google Cloud Pub/Sub'
   spec.homepage      = 'https://github.com/ZimbiX/pubsubc'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 
