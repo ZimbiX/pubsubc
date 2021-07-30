@@ -125,6 +125,8 @@ pubsubc sub
 
 Output of `pubsubc --help`:
 
+<!-- Help -->
+
 ```
 Usage:
     pubsubc [OPTIONS] SUBCOMMAND [ARG] ...
@@ -158,6 +160,8 @@ Options:
     --emulator-host EMULATOR_HOST       The host and port of the Pub/Sub emulator (default: $PUBSUB_EMULATOR_HOST, or "localhost:8085")
     -h, --help                          print help
 ```
+
+<!-- /Help -->
 
 Suffix `--help` to any subcommand to see the usage info for it.
 
