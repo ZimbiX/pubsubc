@@ -9,6 +9,8 @@ Unlike the `gcloud pubsub` utility, `pubsubc`:
 - Supports the [Pub/Sub emulator](https://cloud.google.com/pubsub/docs/emulator)
 - Provides a continuous subscribe command - to see all messages as they come in
 
+![](doc/demo.asciinema.gif)
+
 Since this was originally created as a learning exercise for integrating to Pub/Sub, the source code should be simple enough for you to copy and adapt into your own application.
 
 ## Contents
@@ -23,9 +25,6 @@ Since this was originally created as a learning exercise for integrating to Pub/
   - [Subscribe](#subscribe)
   - [Publish message](#publish-message)
   - [Publish generated messages](#publish-generated-messages)
-- [Example](#example)
-  - [Communicating some messages](#communicating-some-messages)
-  - [Publishing from a message generator with several subscribers](#publishing-from-a-message-generator-with-several-subscribers)
 - [Help info](#help-info)
 - [Contributing](#contributing)
 - [Development](#development)
@@ -106,49 +105,6 @@ To publish a generated message to the topic every second:
 
 ```bash
 pubsubc pub gen --interval 1000
-```
-
-## Example
-
-### Communicating some messages
-
-```
-➜ pubsubc pub msg "Sup wigga"    
-Initialising Pub/Sub client for emulator (localhost:8085)... done
-Checking existence of topic 'my-topic'... creating... done
-Checking existence of subscription 'my-subscription'... creating... done
-Published message: Sup wigga
-
-➜ pubsubc pub msg "Yo J-dog" 
-Initialising Pub/Sub client for emulator (localhost:8085)... done
-Checking existence of topic 'my-topic'... exists
-Checking existence of subscription 'my-subscription'... exists
-Published message: Yo J-dog
-
-➜ pubsubc sub                
-Initialising Pub/Sub client for emulator (localhost:8085)... done
-Checking existence of topic 'my-topic'... exists
-Checking existence of subscription 'my-subscription'... exists
-Listening for messages
-Data: Sup wigga, published at 2021-07-30 23:19:06 +1000
-Data: Yo J-dog, published at 2021-07-30 23:19:41 +1000
-^C
-```
-
-### Publishing from a message generator with several subscribers
-
-![](doc/example-with-generator-and-several-subscribers.png)
-
-The generator was run with:
-
-```bash
-pubsubc pub gen --interval 1
-```
-
-And each subscriber:
-
-```bash
-pubsubc sub
 ```
 
 ## Help info
