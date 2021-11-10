@@ -76,9 +76,11 @@ Clamp do # rubocop:disable Metrics/BlockLength
       # Ensure the subscription exists first so the message won't just get dropped
       subscription
 
+      a = Time.now
       topic.publish(message)
+      b = Time.now
 
-      puts "Published message: #{message}"
+      puts 'Published message: %s in %s s' % [message, b - a]
     end
   end
 
